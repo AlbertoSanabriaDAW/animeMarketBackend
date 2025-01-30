@@ -8,18 +8,19 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarritosRepository::class)]
+#[ORM\Table(name: 'carritos', schema: 'animeMarket')]
 class Carritos
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'id', type: 'integer')]
     private ?int $id = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?usuarios $id_usuario = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'estado', type: 'integer')]
     private ?int $estado = null;
 
     /**

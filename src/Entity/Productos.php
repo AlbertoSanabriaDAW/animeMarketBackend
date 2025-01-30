@@ -8,23 +8,24 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductosRepository::class)]
+#[ORM\Table(name: 'productos', schema: 'animeMarket')]
 class Productos
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'id', type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name:'nombre', length: 255)]
     private ?string $nombre = null;
 
-    #[ORM\Column(length: 2083, nullable: true)]
+    #[ORM\Column(name: 'imagen', length: 2083, nullable: true)]
     private ?string $imagen = null;
 
-    #[ORM\Column(length: 510, nullable: true)]
+    #[ORM\Column(name: 'descripcion', length: 510, nullable: true)]
     private ?string $descripcion = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'precio', type: 'float')]
     private ?float $precio = null;
 
     #[ORM\ManyToOne]

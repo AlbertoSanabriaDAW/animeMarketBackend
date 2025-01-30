@@ -6,6 +6,7 @@ use App\Repository\TematicasRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TematicasRepository::class)]
+#[ORM\Table(name: 'tematicas', schema: 'animeMarket')]
 class Tematicas
 {
     #[ORM\Id]
@@ -13,7 +14,7 @@ class Tematicas
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name:'nombre', length: 255)]
     private ?string $nombre = null;
 
     public function getId(): ?int

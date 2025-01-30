@@ -6,11 +6,12 @@ use App\Repository\ReseniasRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReseniasRepository::class)]
+#[ORM\Table(name: 'resenias', schema: 'animeMarket')]
 class Resenias
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'id', type: 'integer')]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'resenias')]
@@ -21,10 +22,10 @@ class Resenias
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuarios $id_usuario = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'calificacion', type: 'integer')]
     private ?int $calificacion = null;
 
-    #[ORM\Column(length: 510, nullable: true)]
+    #[ORM\Column(name: 'comentario', length: 510, nullable: true)]
     private ?string $comentario = null;
 
     public function getId(): ?int

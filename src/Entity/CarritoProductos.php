@@ -6,11 +6,12 @@ use App\Repository\CarritoProductosRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarritoProductosRepository::class)]
+#[ORM\Table(name: 'carrito_productos', schema: 'animeMarket')]
 class CarritoProductos
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'id', type: 'integer')]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'carritoProductos')]
@@ -19,7 +20,7 @@ class CarritoProductos
     #[ORM\ManyToOne(inversedBy: 'carritoProductos')]
     private ?Productos $id_producto = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'cantidad', type: 'integer')]
     private ?int $cantidad = null;
 
     public function getId(): ?int
