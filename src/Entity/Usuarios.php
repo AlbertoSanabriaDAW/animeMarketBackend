@@ -6,10 +6,12 @@ use App\Repository\UsuariosRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsuariosRepository::class)]
 #[ORM\Table(name: 'usuarios', schema: 'animeMarket')]
-class Usuarios
+class Usuarios implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -43,6 +45,9 @@ class Usuarios
     #[ORM\OneToMany(targetEntity: Pedidos::class, mappedBy: 'id_usuario')]
     private Collection $pedidos;
 
+    #[ORM\Column(name:'contrasenia', length: 600)]
+    private ?string $contrasenia = null;
+
     public function __construct()
     {
         $this->resenias = new ArrayCollection();
@@ -74,6 +79,18 @@ class Usuarios
     public function setCorreo(string $correo): static
     {
         $this->correo = $correo;
+
+        return $this;
+    }
+
+    public function getContrasenia(): ?string
+    {
+        return $this->contrasenia;
+    }
+
+    public function setContrasenia(string $contrasenia): static
+    {
+        $this->contrasenia = $contrasenia;
 
         return $this;
     }
@@ -172,5 +189,29 @@ class Usuarios
         }
 
         return $this;
+    }
+
+
+    public function getPassword(): ?string
+    {
+        // TODO: Implement getPassword() method.
+    }
+
+    public function getRoles(): array
+    {
+        $roles = [];
+        //rolles.add(this.getRol());
+        $roles[] = $this->getRol();
+        return $roles;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        // TODO: Implement getUserIdentifier() method.
     }
 }
