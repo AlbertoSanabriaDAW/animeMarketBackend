@@ -194,7 +194,7 @@ class Usuarios implements UserInterface,PasswordAuthenticatedUserInterface
 
     public function getPassword(): ?string
     {
-        // TODO: Implement getPassword() method.
+      return $this->contrasenia;
     }
 
     public function getRoles(): array
