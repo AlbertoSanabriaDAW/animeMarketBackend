@@ -212,6 +212,6 @@ class Usuarios implements UserInterface,PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        // TODO: Implement getUserIdentifier() method.
+        return $this->getNick();
     }
 }
