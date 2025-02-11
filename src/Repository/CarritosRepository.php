@@ -17,15 +17,28 @@ class CarritosRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Carritos[] Returns an array of Carritos objects
+     * Obtiene todos los carritos con información detallada.
      */
     public function findAllCarritos(): array
     {
         return $this->createQueryBuilder('c')
-            ->select(
-                'c.id',
-                'IDENTITY(c.id_usuario) AS id_usuario'
-            )
+            ->select('c.id, u.id AS id_usuario, c.estado')
+            ->innerJoin('c.usuario', 'u')
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Obtiene los carritos de un usuario específico.
+     */
+    public function findCarritosByUsuario(int $usuarioId): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id, u.id AS id_usuario, c.estado')
+            ->innerJoin('c.usuario', 'u')
+            ->where('u.id = :usuarioId')
+            ->setParameter('usuarioId', $usuarioId)
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult();

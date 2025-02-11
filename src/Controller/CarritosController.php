@@ -4,26 +4,23 @@ namespace App\Controller;
 
 use App\Repository\CarritosRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/carritos', name: 'app_carritos')]
+#[Route('/carritos')]
 final class CarritosController extends AbstractController
 {
     #[Route('/all', name: 'app_carritos_all', methods: ['GET'])]
-    public function getAllCarritos(CarritosRepository $carritosRepository): Response
+    public function getAllCarritos(CarritosRepository $carritosRepository): JsonResponse
     {
-        return $this->json($this->mapCarritos($carritosRepository->findAllCarritos()));
+        return $this->json($carritosRepository->findAllCarritos());
     }
 
-    private function mapCarritos(array $carritos): array
+    #[Route('/byusuario/{usuarioId}', name: 'app_carritos_by_usuario', methods: ['GET'])]
+    public function getCarritosByUsuario(CarritosRepository $carritosRepository, int $usuarioId): JsonResponse
     {
-        return array_map(function ($carrito) {
-            return [
-                'id' => $carrito['id'],
-                'id_usuario' => $carrito['id_usuario'],
-            ];
-        }, $carritos);
+        return $this->json($carritosRepository->findCarritosByUsuario($usuarioId));
     }
 }
 

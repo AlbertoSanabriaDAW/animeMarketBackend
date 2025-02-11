@@ -16,88 +16,117 @@ final class CarritoProductosController extends AbstractController
     {
         $productos = $carritoProductosRepository->findAllCarritoProductos();
 
-        $response = array_map(function ($item) {
-            return [
-                'id' => $item->getId(),
-                'carrito' => [
-                    'id' => $item->getCarrito()->getId(),
-                    'usuario' => $item->getCarrito()->getIdUsuario()->getId(),
-                ],
-                'producto' => [
-                    'id' => $item->getProducto()->getId(),
-                    'nombre' => $item->getProducto()->getNombre(),
-                    'precio' => $item->getProducto()->getPrecio(),
-                ],
-                'cantidad' => $item->getCantidad(),
-            ];
-        }, $productos);
+        return $this->json($productos);
+    }
 
-        return $this->json($response);
+    #[Route('/byusuario/{usuarioId}', name: 'app_carrito_productos_by_usuario', methods: ['GET'])]
+    public function getCarritoProductosByUsuario(int $usuarioId, CarritoProductosRepository $carritoProductosRepository): JsonResponse
+    {
+        $productos = $carritoProductosRepository->findCarritoProductosByUsuario($usuarioId);
+
+        return $this->json($productos);
     }
 }
 
 //
-//namespace App\Repository;
+//namespace App\Controller;
+// FUNCIONA PERO AÑADO COSAS ARRIBA
+//use App\Repository\CarritoProductosRepository;
+//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+//use Symfony\Component\HttpFoundation\JsonResponse;
+//use Symfony\Component\HttpFoundation\Response;
+//use Symfony\Component\Routing\Attribute\Route;
 //
-//use App\Entity\CarritoProductos;
-//use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-//use Doctrine\Persistence\ManagerRegistry;
-//
-///**
-// * @extends ServiceEntityRepository<CarritoProductos>
-// */
-//class CarritoProductosRepository extends ServiceEntityRepository
+//#[Route('/carritoproductos')]
+//final class CarritoProductosController extends AbstractController
 //{
-//    public function __construct(ManagerRegistry $registry)
+//    #[Route('/all', name: 'app_carrito_productos_all', methods: ['GET'])]
+//    public function getAllCarritoProductos(CarritoProductosRepository $carritoProductosRepository): JsonResponse
 //    {
-//        parent::__construct($registry, CarritoProductos::class);
-//    }
+//        $productos = $carritoProductosRepository->findAllCarritoProductos();
 //
-//    /**
-//     * Obtiene todos los productos en los carritos con información detallada.
-//     */
-//    public function findAllCarritoProductos(): array
-//    {
-//        return $this->createQueryBuilder('cp')
-//            ->select('cp.id, c.id AS id_carrito, p.id AS id_producto, p.nombre, p.precio, cp.cantidad')
-//            ->innerJoin('cp.idCarrito', 'c')
-//            ->innerJoin('cp.idProducto', 'p')
-//            ->orderBy('cp.id', 'ASC')
-//            ->getQuery()
-//            ->getResult();
+//        $response = array_map(function ($item) {
+//            return [
+//                'id' => $item->getId(),
+//                'carrito' => [
+//                    'id' => $item->getCarrito()->getId(),
+//                    'usuario' => $item->getCarrito()->getIdUsuario()->getId(),
+//                ],
+//                'producto' => [
+//                    'id' => $item->getProducto()->getId(),
+//                    'nombre' => $item->getProducto()->getNombre(),
+//                    'precio' => $item->getProducto()->getPrecio(),
+//                ],
+//                'cantidad' => $item->getCantidad(),
+//            ];
+//        }, $productos);
+//
+//        return $this->json($response);
 //    }
 //}
 //
 ////
-////namespace App\Controller;
+////namespace App\Repository;
 ////
-////use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-////use Symfony\Component\HttpFoundation\Response;
-////use Symfony\Component\Routing\Attribute\Route;
-////#[Route('/carritoproductos')]
-////final class CarritoProductosController extends AbstractController
+////use App\Entity\CarritoProductos;
+////use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+////use Doctrine\Persistence\ManagerRegistry;
+////
+/////**
+//// * @extends ServiceEntityRepository<CarritoProductos>
+//// */
+////class CarritoProductosRepository extends ServiceEntityRepository
 ////{
-////    #[Route('/all', name: 'app_carritoproductos', methods: ['GET'])]
-////    public function getAllCarritoProductos(CarritoProductosRepository $carritoProductosRepository): Response
+////    public function __construct(ManagerRegistry $registry)
 ////    {
-////        $listaCarritoProductos = array_map(function ($carritoProducto) {
-////            return [
-////                'id' => $carritoProducto->getId(),
-////                'id_carrito' => $carritoProducto->getIdCarrito(),
-////                'id_producto' => $carritoProducto->getIdProducto(),
-////                'cantidad' => $carritoProducto->getCantidad(),
-////            ];
-////        }, $carritoProductosRepository->findAll());
-////        return $this->json($listaCarritoProductos);
+////        parent::__construct($registry, CarritoProductos::class);
+////    }
+////
+////    /**
+////     * Obtiene todos los productos en los carritos con información detallada.
+////     */
+////    public function findAllCarritoProductos(): array
+////    {
+////        return $this->createQueryBuilder('cp')
+////            ->select('cp.id, c.id AS id_carrito, p.id AS id_producto, p.nombre, p.precio, cp.cantidad')
+////            ->innerJoin('cp.idCarrito', 'c')
+////            ->innerJoin('cp.idProducto', 'p')
+////            ->orderBy('cp.id', 'ASC')
+////            ->getQuery()
+////            ->getResult();
 ////    }
 ////}
+////
+//////
+//////namespace App\Controller;
+//////
+//////use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+//////use Symfony\Component\HttpFoundation\Response;
+//////use Symfony\Component\Routing\Attribute\Route;
+//////#[Route('/carritoproductos')]
 //////final class CarritoProductosController extends AbstractController
 //////{
-//////    #[Route('/carrito/productos', name: 'app_carrito_productos')]
-//////    public function index(): Response
+//////    #[Route('/all', name: 'app_carritoproductos', methods: ['GET'])]
+//////    public function getAllCarritoProductos(CarritoProductosRepository $carritoProductosRepository): Response
 //////    {
-//////        return $this->render('carrito_productos/index.html.twig', [
-//////            'controller_name' => 'CarritoProductosController',
-//////        ]);
+//////        $listaCarritoProductos = array_map(function ($carritoProducto) {
+//////            return [
+//////                'id' => $carritoProducto->getId(),
+//////                'id_carrito' => $carritoProducto->getIdCarrito(),
+//////                'id_producto' => $carritoProducto->getIdProducto(),
+//////                'cantidad' => $carritoProducto->getCantidad(),
+//////            ];
+//////        }, $carritoProductosRepository->findAll());
+//////        return $this->json($listaCarritoProductos);
 //////    }
 //////}
+////////final class CarritoProductosController extends AbstractController
+////////{
+////////    #[Route('/carrito/productos', name: 'app_carrito_productos')]
+////////    public function index(): Response
+////////    {
+////////        return $this->render('carrito_productos/index.html.twig', [
+////////            'controller_name' => 'CarritoProductosController',
+////////        ]);
+////////    }
+////////}
