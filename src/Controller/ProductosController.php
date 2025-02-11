@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Controller;
 
 use App\Repository\ProductosRepository;
@@ -10,119 +11,123 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/productos', name: 'app_productos')]
 final class ProductosController extends AbstractController
 {
-//    #[Route('/productos', name: 'app_productos')]
-//    public function index(): Response
-//    {
-//        return $this->render('productos/index.html.twig', [
-//            'controller_name' => 'ProductosController',
-//        ]);
-//    }
     #[Route('/all', name: 'app_productos_all', methods: ['GET'])]
-    public function getAllproductos(ProductosRepository $productosRepository): Response
+    public function getAllProductos(ProductosRepository $productosRepository): Response
     {
-        $listaProductos = array_map(function ($producto) {
-            return [
-                'id' => $producto->getId(),
-                'nombre' => $producto->getNombre(),
-                'imagen' => $producto->getImagen(),
-                'descripcion' => $producto->getDescripcion(),
-                'precio' => $producto->getPrecio(),
-                'id_tematica' => $producto->getIdTematica(),
-            ];
-        }, $productosRepository->findAll());
-        return $this->json($listaProductos);
+        return $this->json($this->mapProductos($productosRepository->findAllProductos()));
     }
-    #[Route('/bobobo', name: 'app_productos_bobobo', methods: ['GET'])]
-    public function getBoboboproductos(ProductosRepository $productosRepository): Response
-    {
-        $listaProductos = array_filter(array_map(function ($producto) {
-            return [
-                'id' => $producto->getId(),
-                'nombre' => $producto->getNombre(),
-                'imagen' => $producto->getImagen(),
-                'descripcion' => $producto->getDescripcion(),
-                'precio' => $producto->getPrecio(),
-                'id_tematica' => $producto->getIdTematica(),
-            ];
-        }, $productosRepository->findAll()), function ($producto) {
-            return $producto['id_tematica'] == 1;
-        });
 
-        return $this->json(array_values($listaProductos));
+    private function mapProductos(array $productos): array
+    {
+        return array_map(function ($producto) {
+            return [
+                'id' => $producto['id'],
+                'nombre' => $producto['nombre'],
+                'imagen' => $producto['imagen'],
+                'descripcion' => $producto['descripcion'],
+                'precio' => $producto['precio'],
+                'id_tematica' => $producto['id_tematica'],
+            ];
+        }, $productos);
+    }
+
+    #[Route('/bobobo', name: 'app_productos_bobobo', methods: ['GET'])]
+    public function getBoboboProductos(ProductosRepository $productosRepository): Response
+    {
+        return $this->json($this->mapProductos($productosRepository->filterProductosByTematica(1)));
     }
 
     #[Route('/dragonball', name: 'app_productos_dragonball', methods: ['GET'])]
-    public function getDragonballproductos(ProductosRepository $productosRepository): Response
+    public function getDragonBallProductos(ProductosRepository $productosRepository): Response
     {
-        $listaProductos = array_filter(array_map(function ($producto) {
-            return [
-                'id' => $producto->getId(),
-                'nombre' => $producto->getNombre(),
-                'imagen' => $producto->getImagen(),
-                'descripcion' => $producto->getDescripcion(),
-                'precio' => $producto->getPrecio(),
-                'id_tematica' => $producto->getIdTematica(),
-            ];
-        }, $productosRepository->findAll()), function ($producto) {
-            return $producto['id_tematica'] == 2;
-        });
-
-        return $this->json(array_values($listaProductos));
+        return $this->json($this->mapProductos($productosRepository->filterProductosByTematica(2)));
     }
+
     #[Route('/doraemon', name: 'app_productos_doraemon', methods: ['GET'])]
-    public function getDoraemonproductos(ProductosRepository $productosRepository): Response
+    public function getDoraemonProductos(ProductosRepository $productosRepository): Response
     {
-        $listaProductos = array_filter(array_map(function ($producto) {
-            return [
-                'id' => $producto->getId(),
-                'nombre' => $producto->getNombre(),
-                'imagen' => $producto->getImagen(),
-                'descripcion' => $producto->getDescripcion(),
-                'precio' => $producto->getPrecio(),
-                'id_tematica' => $producto->getIdTematica(),
-            ];
-        }, $productosRepository->findAll()), function ($producto) {
-            return $producto['id_tematica'] == 3;
-        });
-
-        return $this->json(array_values($listaProductos));
+        return $this->json($this->mapProductos($productosRepository->filterProductosByTematica(3)));
     }
-    #[Route('/pokemon', name: 'app_productos_pokemon', methods: ['GET'])]
-    public function getPokemonproductos(ProductosRepository $productosRepository): Response
-    {
-        $listaProductos = array_filter(array_map(function ($producto) {
-            return [
-                'id' => $producto->getId(),
-                'nombre' => $producto->getNombre(),
-                'imagen' => $producto->getImagen(),
-                'descripcion' => $producto->getDescripcion(),
-                'precio' => $producto->getPrecio(),
-                'id_tematica' => $producto->getIdTematica(),
-            ];
-        }, $productosRepository->findAll()), function ($producto) {
-            return $producto['id_tematica'] == 4;
-        });
 
-        return $this->json(array_values($listaProductos));
+    #[Route('/pokemon', name: 'app_productos_pokemon', methods: ['GET'])]
+    public function getPokemonProductos(ProductosRepository $productosRepository): Response
+    {
+        return $this->json($this->mapProductos($productosRepository->filterProductosByTematica(4)));
     }
 
     #[Route('/kimetsu', name: 'app_productos_kimetsu', methods: ['GET'])]
-    public function getKimetsuproductos(ProductosRepository $productosRepository): Response
+    public function getKimetsuProductos(ProductosRepository $productosRepository): Response
     {
-        $listaProductos = array_filter(array_map(function ($producto) {
-            return [
-                'id' => $producto->getId(),
-                'nombre' => $producto->getNombre(),
-                'imagen' => $producto->getImagen(),
-                'descripcion' => $producto->getDescripcion(),
-                'precio' => $producto->getPrecio(),
-                'id_tematica' => $producto->getIdTematica(),
-            ];
-        }, $productosRepository->findAll()), function ($producto) {
-            return $producto['id_tematica'] == 5;
-        });
-
-        return $this->json(array_values($listaProductos));
+        return $this->json($this->mapProductos($productosRepository->filterProductosByTematica(5)));
     }
-
 }
+
+
+//
+//namespace App\Controller;
+//
+//use App\Repository\ProductosRepository;
+//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+//use Symfony\Component\HttpFoundation\Response;
+//use Symfony\Component\Routing\Attribute\Route;
+//
+//#[Route('/productos', name: 'app_productos')]
+//final class ProductosController extends AbstractController
+//{
+//    #[Route('/all', name: 'app_productos_all', methods: ['GET'])]
+//    public function getAllProductos(ProductosRepository $productosRepository): Response
+//    {
+//        return $this->json($this->mapProductos($productosRepository->findAll()));
+//    }
+//
+//    private function mapProductos(array $productos): array
+//    {
+//        return array_map(function ($producto) {
+//            return [
+//                'id' => $producto->getId(),
+//                'nombre' => $producto->getNombre(),
+//                'imagen' => $producto->getImagen(),
+//                'descripcion' => $producto->getDescripcion(),
+//                'precio' => $producto->getPrecio(),
+//                'id_tematica' => $producto->getIdTematica(),
+//            ];
+//        }, $productos);
+//    }
+//
+//    private function filterProductosByTematica(ProductosRepository $productosRepository, int $idTematica): array
+//    {
+//        return array_values(array_filter($this->mapProductos($productosRepository->findAll()), function ($producto) use ($idTematica) {
+//            return $producto['id_tematica'] === $idTematica;
+//        }));
+//    }
+//
+//    #[Route('/bobobo', name: 'app_productos_bobobo', methods: ['GET'])]
+//    public function getBoboboProductos(ProductosRepository $productosRepository): Response
+//    {
+//        return $this->json($this->filterProductosByTematica($productosRepository, 1));
+//    }
+//
+//    #[Route('/dragonball', name: 'app_productos_dragonball', methods: ['GET'])]
+//    public function getDragonBallProductos(ProductosRepository $productosRepository): Response
+//    {
+//        return $this->json($this->filterProductosByTematica($productosRepository, 2));
+//    }
+//
+//    #[Route('/doraemon', name: 'app_productos_doraemon', methods: ['GET'])]
+//    public function getDoraemonProductos(ProductosRepository $productosRepository): Response
+//    {
+//        return $this->json($this->filterProductosByTematica($productosRepository, 3));
+//    }
+//
+//    #[Route('/pokemon', name: 'app_productos_pokemon', methods: ['GET'])]
+//    public function getPokemonProductos(ProductosRepository $productosRepository): Response
+//    {
+//        return $this->json($this->filterProductosByTematica($productosRepository, 4));
+//    }
+//
+//    #[Route('/kimetsu', name: 'app_productos_kimetsu', methods: ['GET'])]
+//    public function getKimetsuProductos(ProductosRepository $productosRepository): Response
+//    {
+//        return $this->json($this->filterProductosByTematica($productosRepository, 5));
+//    }
+//}
