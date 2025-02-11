@@ -15,9 +15,15 @@ final class PedidosController extends AbstractController
     {
         return $this->json($pedidosRepository->findAllPedidos());
     }
+
+    #[Route('/usuario/{id}', name: 'app_pedidos_usuario', methods: ['GET'])]
+    public function getPedidosByUsuario(int $id, PedidosRepository $pedidosRepository): Response
+    {
+        return $this->json($pedidosRepository->findPedidosByUsuario($id));
+    }
 }
 
-//
+//// FUNCIONA PERO AÑADO COSAS ARRIBA
 //namespace App\Controller;
 //
 //use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,14 +47,14 @@ final class PedidosController extends AbstractController
 //        return $this->json($listaPedidos);
 //    }
 //}
-////final class PedidosController extends AbstractController
-////{
-////    #[Route('/pedidos', name: 'app_pedidos')]
-////    public function index(): Response
-////    {
-////        return $this->render('pedidos/index.html.twig', [
-////            'controller_name' => 'PedidosController',
-////        ]);
-////    }
-////}
-//
+//final class PedidosController extends AbstractController
+//{
+//    #[Route('/pedidos', name: 'app_pedidos')]
+//    public function index(): Response
+//    {
+//        return $this->render('pedidos/index.html.twig', [
+//            'controller_name' => 'PedidosController',
+//        ]);
+//    }
+//}
+
