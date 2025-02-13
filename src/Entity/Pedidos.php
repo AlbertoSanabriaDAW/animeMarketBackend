@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PedidosRepository::class)]
-#[ORM\Table(name: 'pedidos', schema: 'animeMarket')]
+#[ORM\Table(name: 'pedidos', schema: 'animemarket')]
 class Pedidos
 {
     #[ORM\Id]

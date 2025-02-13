@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsuariosRepository::class)]
-#[ORM\Table(name: 'usuarios', schema: 'animeMarket')]
+#[ORM\Table(name: 'usuarios', schema: 'animemarket')]
 class Usuarios implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

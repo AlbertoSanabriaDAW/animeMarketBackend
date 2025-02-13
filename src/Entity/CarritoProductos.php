@@ -6,7 +6,7 @@ use App\Repository\CarritoProductosRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarritoProductosRepository::class)]
-#[ORM\Table(name: 'carrito_productos', schema: 'animeMarket')]
+#[ORM\Table(name: 'carrito_productos', schema: 'animemarket')]
 class CarritoProductos
 {
     #[ORM\Id]

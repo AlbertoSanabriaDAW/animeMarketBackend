@@ -6,7 +6,7 @@ use App\Repository\ReseniasRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReseniasRepository::class)]
-#[ORM\Table(name: 'resenias', schema: 'animeMarket')]
+#[ORM\Table(name: 'resenias', schema: 'animemarket')]
 class Resenias
 {
     #[ORM\Id]
