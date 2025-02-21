@@ -104,6 +104,55 @@ final class CarritoProductosController extends AbstractController
             ]
         ], JsonResponse::HTTP_OK);
     }
+
+//        #[Route('/api/carrito/agregar/{id_producto}', name: 'agregar_producto_carrito', methods: ['POST'])]
+//        public function agregarProductoAlCarrito(int $id_producto, ProductosRepository $productosRepository, CarritosRepository $carritosRepository, CarritoProductosRepository $carritoProductosRepository): JsonResponse
+//        {
+//            $token = $this->tokenStorage->getToken();
+//            $user = $token ? $token->getUser() : null;
+//
+//            if (!$user || !is_object($user)) {
+//                return new JsonResponse(['error' => 'Usuario no autenticado'], JsonResponse::HTTP_UNAUTHORIZED);
+//            }
+//
+//            $producto = $productosRepository->find($id_producto);
+//            if (!$producto) {
+//                return new JsonResponse(['error' => 'Producto no encontrado'], JsonResponse::HTTP_NOT_FOUND);
+//            }
+//
+//            $carrito = $carritosRepository->findOneBy(['usuario' => $user]);
+//            if (!$carrito) {
+//                return new JsonResponse(['error' => 'Carrito no encontrado'], JsonResponse::HTTP_NOT_FOUND);
+//            }
+//
+//            $carritoProducto = $carritoProductosRepository->findOneBy([
+//                'carrito' => $carrito,
+//                'producto' => $producto
+//            ]);
+//
+//            if ($carritoProducto) {
+//                $carritoProducto->setCantidad($carritoProducto->getCantidad() + 1);
+//            } else {
+//                $carritoProducto = new CarritoProductos();
+//                $carritoProducto->setCarrito($carrito);
+//                $carritoProducto->setProducto($producto);
+//                $carritoProducto->setCantidad(1);
+//
+//                $this->entityManager->persist($carritoProducto);
+//            }
+//
+//            $this->entityManager->flush();
+//
+//            return new JsonResponse([
+//                'mensaje' => 'Producto agregado al carrito con éxito',
+//                'producto' => [
+//                    'id' => $producto->getId(),
+//                    'nombre' => $producto->getNombre(),
+//                    'cantidad' => $carritoProducto->getCantidad()
+//                ]
+//            ], JsonResponse::HTTP_OK);
+//        }
+
 }
 
 
