@@ -17,6 +17,26 @@ final class ProductosController extends AbstractController
         return $this->json($this->mapProductos($productosRepository->findAllProductos()));
     }
 
+//    #[Route('/get/{id}', name: 'app_productos_get', methods: ['GET'])]
+    #[Route('/get/{id}', name: 'app_productos_get', methods: ['GET'])]
+    public function getProductoById(int $id, ProductosRepository $productosRepository): Response
+    {
+        $producto = $productosRepository->findProductoById($id);
+
+        if (!$producto) {
+            return $this->json(['error' => 'Producto no encontrado'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json([
+            'id' => $producto['id'],
+            'nombre' => $producto['nombre'],
+            'imagen' => $producto['imagen'],
+            'descripcion' => $producto['descripcion'],
+            'precio' => $producto['precio'],
+            'id_tematica' => $producto['id_tematica'],
+        ]);
+    }
+
     private function mapProductos(array $productos): array
     {
         return array_map(function ($producto) {
@@ -30,6 +50,8 @@ final class ProductosController extends AbstractController
             ];
         }, $productos);
     }
+
+
 
     #[Route('/bobobo', name: 'app_productos_bobobo', methods: ['GET'])]
     public function getBoboboProductos(ProductosRepository $productosRepository): Response

@@ -41,7 +41,8 @@ final class CarritoProductosController extends AbstractController
         return $this->json($productos);
     }
 
-    #[Route('/api/carrito/agregar', name: 'agregar_producto_carrito', methods: ['POST'])]
+    //  #[Route('/api/carrito/agregar', name: 'agregar_producto_carrito', methods: ['POST'])]
+    #[Route('/carrito/agregar', name: 'agregar_producto_carrito', methods: ['POST'])]
     public function agregarProductoAlCarrito(
         Request $request,
         CarritosRepository $carritosRepository,
