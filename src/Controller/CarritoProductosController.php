@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Usuarios;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,7 +42,18 @@ final class CarritoProductosController extends AbstractController
         return $this->json($productos);
     }
 
-    //  #[Route('/api/carrito/agregar', name: 'agregar_producto_carrito', methods: ['POST'])]
+//    #[Route('/carrito/agregar/{idProducto}', name: 'agregar_producto_carrito', methods: ['POST'])]
+//    public function agregarProductoAlCarrito(
+//        Request $request,
+//        CarritosRepository $carritosRepository,
+//        CarritoProductosRepository $carritoProductosRepository,
+//        ProductosRepository $productosRepository
+//    ): JsonResponse {
+//        $requestContent = json_decode($request->getContent(), true);
+//        return new JsonResponse($requestContent);
+//    }
+
+
     #[Route('/carrito/agregar', name: 'agregar_producto_carrito', methods: ['POST'])]
     public function agregarProductoAlCarrito(
         Request $request,
@@ -49,8 +61,13 @@ final class CarritoProductosController extends AbstractController
         CarritoProductosRepository $carritoProductosRepository,
         ProductosRepository $productosRepository
     ): JsonResponse {
+        // Verificar cabeceras
+        dump($request->headers->all());
+
         $token = $this->tokenStorage->getToken();
-        $user = $token ? $token->getUser() : null;
+        $user = $token?->getUser();
+
+        dump($user);
 
         if (!$user || !is_object($user)) {
             return new JsonResponse(['error' => 'Usuario no autenticado'], JsonResponse::HTTP_UNAUTHORIZED);
@@ -66,7 +83,10 @@ final class CarritoProductosController extends AbstractController
         // Obtener el carrito del usuario
         $carrito = $carritosRepository->findOneBy(['usuario' => $user]);
         if (!$carrito) {
-            return new JsonResponse(['error' => 'Carrito no encontrado'], JsonResponse::HTTP_NOT_FOUND);
+            $carrito = new Carritos();
+            $carrito->setUsuario($user);
+            $this->entityManager->persist($carrito);
+            $this->entityManager->flush();
         }
 
         // Obtener el producto
