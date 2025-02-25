@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-#[Route('/pedidos', name: 'app_pedidos')]
+#[Route('/api/pedidos', name: 'app_pedidos')]
 final class PedidosController extends AbstractController
 {
     #[Route('/all', name: 'app_pedidos_all', methods: ['GET'])]

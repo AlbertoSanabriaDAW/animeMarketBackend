@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/productos', name: 'app_productos')]
+#[Route('/api/productos', name: 'app_productos')]
 final class ProductosController extends AbstractController
 {
     #[Route('/all', name: 'app_productos_all', methods: ['GET'])]

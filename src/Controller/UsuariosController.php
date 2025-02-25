@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/usuarios')]
+#[Route('/api/usuarios')]
 final class UsuariosController extends AbstractController
 {
      /**

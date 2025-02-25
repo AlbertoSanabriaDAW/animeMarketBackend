@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/tematicas', name: 'app_tematicas')]
+#[Route('/api/tematicas', name: 'app_tematicas')]
 final class TematicasController extends AbstractController
 {
     #[Route('/all', name: 'app_tematicas_all', methods: ['GET'])]

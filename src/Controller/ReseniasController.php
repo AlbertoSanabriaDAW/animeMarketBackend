@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/resenias', name: 'app_resenias')]
+#[Route('/api/resenias', name: 'app_resenias')]
 final class ReseniasController extends AbstractController
 {
     #[Route('/all', name: 'app_resenias_all', methods: ['GET'])]

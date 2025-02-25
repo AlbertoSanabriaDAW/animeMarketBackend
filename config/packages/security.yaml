@@ -24,7 +24,7 @@ security:
 
         # Firewall para proteger las rutas de la API con JWT
         api:
-            pattern: ^/api
+            pattern: ^/api/
             stateless: true
             provider: app_user_provider
             jwt: ~
@@ -33,6 +33,9 @@ security:
     access_control:
         - { path: ^/api/usuarios/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/usuarios/registro, roles: PUBLIC_ACCESS }
+        - { path: ^/api/carritoproductos/carrito/agregar, roles: PUBLIC_ACCESS }
+        - { path: ^/api/productos/all, roles: PUBLIC_ACCESS }
+#        - { path: ^/api/carritoproductos/carrito/agregar, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

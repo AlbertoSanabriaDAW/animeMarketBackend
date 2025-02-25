@@ -16,11 +16,11 @@ use App\Repository\CarritoProductosRepository;
 use App\Repository\ProductosRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface; // 🔥 USO TokenStorageInterface en lugar de Security
 
-#[Route('/carritoproductos')]
+#[Route('/api/carritoproductos')]
 final class CarritoProductosController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
-    private TokenStorageInterface $tokenStorage; // 🔥 Cambio de Security a TokenStorageInterface
+    private TokenStorageInterface $tokenStorage; // Cambio de Security a TokenStorageInterface
 
     public function __construct(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage)
     {
@@ -56,20 +56,22 @@ final class CarritoProductosController extends AbstractController
 
     #[Route('/carrito/agregar', name: 'agregar_producto_carrito', methods: ['POST'])]
     public function agregarProductoAlCarrito(
-        Request $request,
-        CarritosRepository $carritosRepository,
+        Request                    $request,
+        CarritosRepository         $carritosRepository,
         CarritoProductosRepository $carritoProductosRepository,
-        ProductosRepository $productosRepository
-    ): JsonResponse {
+        ProductosRepository        $productosRepository
+    ): JsonResponse
+    {
         // Verificar cabeceras
-        dump($request->headers->all());
-
-        $token = $this->tokenStorage->getToken();
-        $user = $token?->getUser();
-
-        dump($user);
-
-        if (!$user || !is_object($user)) {
+//        dump($request->headers->all());
+//
+//        $token = $this->tokenStorage->getToken();
+//        $user = $token?->getUser();
+//
+//        dump($user);
+        /** @var Usuarios $user */
+        $user = $this->getUser();
+        if ($user === null) {
             return new JsonResponse(['error' => 'Usuario no autenticado'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
@@ -85,6 +87,7 @@ final class CarritoProductosController extends AbstractController
         if (!$carrito) {
             $carrito = new Carritos();
             $carrito->setUsuario($user);
+            $carrito->setEstado(0);
             $this->entityManager->persist($carrito);
             $this->entityManager->flush();
         }
@@ -125,84 +128,5 @@ final class CarritoProductosController extends AbstractController
             ]
         ], JsonResponse::HTTP_OK);
     }
-
-//        #[Route('/api/carrito/agregar/{id_producto}', name: 'agregar_producto_carrito', methods: ['POST'])]
-//        public function agregarProductoAlCarrito(int $id_producto, ProductosRepository $productosRepository, CarritosRepository $carritosRepository, CarritoProductosRepository $carritoProductosRepository): JsonResponse
-//        {
-//            $token = $this->tokenStorage->getToken();
-//            $user = $token ? $token->getUser() : null;
-//
-//            if (!$user || !is_object($user)) {
-//                return new JsonResponse(['error' => 'Usuario no autenticado'], JsonResponse::HTTP_UNAUTHORIZED);
-//            }
-//
-//            $producto = $productosRepository->find($id_producto);
-//            if (!$producto) {
-//                return new JsonResponse(['error' => 'Producto no encontrado'], JsonResponse::HTTP_NOT_FOUND);
-//            }
-//
-//            $carrito = $carritosRepository->findOneBy(['usuario' => $user]);
-//            if (!$carrito) {
-//                return new JsonResponse(['error' => 'Carrito no encontrado'], JsonResponse::HTTP_NOT_FOUND);
-//            }
-//
-//            $carritoProducto = $carritoProductosRepository->findOneBy([
-//                'carrito' => $carrito,
-//                'producto' => $producto
-//            ]);
-//
-//            if ($carritoProducto) {
-//                $carritoProducto->setCantidad($carritoProducto->getCantidad() + 1);
-//            } else {
-//                $carritoProducto = new CarritoProductos();
-//                $carritoProducto->setCarrito($carrito);
-//                $carritoProducto->setProducto($producto);
-//                $carritoProducto->setCantidad(1);
-//
-//                $this->entityManager->persist($carritoProducto);
-//            }
-//
-//            $this->entityManager->flush();
-//
-//            return new JsonResponse([
-//                'mensaje' => 'Producto agregado al carrito con éxito',
-//                'producto' => [
-//                    'id' => $producto->getId(),
-//                    'nombre' => $producto->getNombre(),
-//                    'cantidad' => $carritoProducto->getCantidad()
-//                ]
-//            ], JsonResponse::HTTP_OK);
-//        }
-
 }
-
-
-//
-//namespace App\Controller;
-//
-//use App\Repository\CarritoProductosRepository;
-//use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-//use Symfony\Component\HttpFoundation\JsonResponse;
-//use Symfony\Component\HttpFoundation\Response;
-//use Symfony\Component\Routing\Attribute\Route;
-//
-//#[Route('/carritoproductos')]
-//final class CarritoProductosController extends AbstractController
-//{
-//    #[Route('/all', name: 'app_carrito_productos_all', methods: ['GET'])]
-//    public function getAllCarritoProductos(CarritoProductosRepository $carritoProductosRepository): JsonResponse
-//    {
-//        $productos = $carritoProductosRepository->findAllCarritoProductos();
-//
-//        return $this->json($productos);
-//    }
-//
-//    #[Route('/byusuario/{usuarioId}', name: 'app_carrito_productos_by_usuario', methods: ['GET'])]
-//    public function getCarritoProductosByUsuario(int $usuarioId, CarritoProductosRepository $carritoProductosRepository): JsonResponse
-//    {
-//        $productos = $carritoProductosRepository->findCarritoProductosByUsuario($usuarioId);
-//
-//        return $this->json($productos);
-//    }
-//}
 

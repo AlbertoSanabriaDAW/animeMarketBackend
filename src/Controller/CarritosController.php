@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/carritos')]
+#[Route('/api/carritos')]
 final class CarritosController extends AbstractController
 {
     #[Route('/all', name: 'app_carritos_all', methods: ['GET'])]

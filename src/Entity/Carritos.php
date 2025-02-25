@@ -20,8 +20,11 @@ class Carritos
     #[ORM\JoinColumn(name: 'id_usuario', referencedColumnName: 'id', nullable: false)]
     private ?Usuarios $usuario = null;
 
-    #[ORM\Column(type: 'string', length: 20)]
-    private ?string $estado = null;
+//    #[ORM\Column(type: 'string', length: 20)]
+//    private ?string $estado = null;
+
+    #[ORM\Column(name: 'estado', type: 'integer')]
+    private ?int $estado = null;
 
     #[ORM\OneToMany(targetEntity: CarritoProductos::class, mappedBy: 'carrito')]
     private Collection $productos;
