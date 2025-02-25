@@ -64,13 +64,7 @@ final class CarritoProductosController extends AbstractController
         ProductosRepository        $productosRepository
     ): JsonResponse
     {
-        // Verificar cabeceras
-//        dump($request->headers->all());
-//
-//        $token = $this->tokenStorage->getToken();
-//        $user = $token?->getUser();
-//
-//        dump($user);
+
         /** @var Usuarios $user */
         $user = $this->getUser();
         if ($user === null) {
