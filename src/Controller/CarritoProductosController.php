@@ -35,10 +35,12 @@ final class CarritoProductosController extends AbstractController
         return $this->json($productos);
     }
 
-    #[Route('/byusuario/{usuarioId}', name: 'app_carrito_productos_by_usuario', methods: ['GET'])]
-    public function getCarritoProductosByUsuario(int $usuarioId, CarritoProductosRepository $carritoProductosRepository): JsonResponse
+    #[Route('/byusuario', name: 'app_carrito_productos_by_usuario', methods: ['GET'])]
+    public function getCarritoProductosByUsuario(CarritoProductosRepository $carritoProductosRepository): JsonResponse
     {
-        $productos = $carritoProductosRepository->findCarritoProductosByUsuario($usuarioId);
+        /** @var Usuarios $user */
+        $user = $this->getUser();
+        $productos = $carritoProductosRepository->findCarritoProductosByUsuario($user->getId());
         return $this->json($productos);
     }
 
