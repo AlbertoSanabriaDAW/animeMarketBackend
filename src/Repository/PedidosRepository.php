@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Pedidos;
+use App\Entity\Usuarios;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -36,5 +37,24 @@ class PedidosRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+//    public function crearPedido(int $idCarrito, Usuarios $usuarios): void
+//    {
+//        $conn = $this->getEntityManager()->getConnection();
+//
+//        $sql = '
+//            INSERT INTO pedidos (id_carrito, id_usuario, fecha, precio)
+//            SELECT :idCarrito, :idUsuario, NOW(), c.total
+//            FROM carritos c
+//            WHERE c.id = :idCarrito
+//        ';
+//
+//        $result = $conn->executeQuery($sql, [
+//            'idCarrito' => $idCarrito,
+//            'idUsuario' => $usuarios->getId(),
+//        ]);
+//
+//        $result->fetchAllAssociative();
+//    }
 }
 

@@ -40,6 +40,7 @@ security:
         - { path: ^/api/productos/doraemon, roles: PUBLIC_ACCESS }
         - { path: ^/api/productos/pokemon, roles: PUBLIC_ACCESS }
         - { path: ^/api/productos/kimetsu, roles: PUBLIC_ACCESS }
+        - { path: ^/api/pedidos/comprar, roles: PUBLIC_ACCESS }
 #        - { path: ^/api/carritoproductos/carrito/agregar, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 

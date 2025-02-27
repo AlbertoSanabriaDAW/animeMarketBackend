@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Pedidos;
 use App\Entity\Carritos;
+use App\Entity\Usuarios;
 use App\Repository\PedidosRepository;
 use App\Repository\CarritosRepository;
 use App\Repository\CarritoProductosRepository;
@@ -30,31 +31,35 @@ final class PedidosController extends AbstractController
         return $this->json($pedidosRepository->findPedidosByUsuario($id));
     }
 
-    #[Route('/comprar/{usuarioId}', name: 'app_comprar_carrito', methods: ['POST'])]
+    #[Route('/comprar/{carritoId}', name: 'app_comprar_carrito', methods: ['POST'])]
     public function comprarCarrito(
-        int $usuarioId,
-        CarritosRepository $carritosRepository,
+        int                        $carritoId,
+        CarritosRepository         $carritosRepository,
         CarritoProductosRepository $carritoProductosRepository,
-        ProductosRepository $productosRepository,
-        PedidosRepository $pedidosRepository,
-        EntityManagerInterface $entityManager
+        ProductosRepository        $productosRepository,
+        PedidosRepository          $pedidosRepository,
+        EntityManagerInterface     $entityManager
     ): JsonResponse {
+
+        /** @var Usuarios $usuario */
+        $usuario = $this->getUser();
+
         // Buscar el carrito activo del usuario
-        $carrito = $carritosRepository->findOneBy(['id_usuario' => $usuarioId, 'estado' => 'activo']);
+        $carrito = $carritosRepository->findOneBy(['id' => $carritoId, 'estado' => 0]);
 
         if (!$carrito) {
             return new JsonResponse(['error' => 'No se encontró un carrito activo para el usuario'], Response::HTTP_BAD_REQUEST);
         }
 
         // Obtener productos del carrito
-        $carritoProductos = $carritoProductosRepository->findBy(['id_carrito' => $carrito->getId()]);
+        $carritoProductos = $carritoProductosRepository->findBy(['carrito' => $carrito->getId()]);
         if (!$carritoProductos) {
             return new JsonResponse(['error' => 'El carrito está vacío'], Response::HTTP_BAD_REQUEST);
         }
 
         $precioTotal = 0;
         foreach ($carritoProductos as $carritoProducto) {
-            $producto = $productosRepository->find($carritoProducto->getIdProducto()->getId());
+            $producto = $productosRepository->find($carritoProducto->getProducto()->getId());
             if ($producto) {
                 $precioTotal += $producto->getPrecio() * $carritoProducto->getCantidad();
             }
@@ -62,14 +67,14 @@ final class PedidosController extends AbstractController
 
         // Crear un nuevo pedido
         $pedido = new Pedidos();
-        $pedido->setIdUsuario($carrito->getIdUsuario());
+        $pedido->setIdUsuario($usuario);
         $pedido->setFecha(new \DateTime());
         $pedido->setPrecio($precioTotal);
 
         $entityManager->persist($pedido);
 
         // Marcar el carrito como finalizado
-        $carrito->setEstado('finalizado');
+        $carrito->setEstado(1);
         $entityManager->persist($carrito);
 
         // Guardar cambios en la base de datos
