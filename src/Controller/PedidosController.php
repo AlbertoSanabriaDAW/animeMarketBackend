@@ -70,6 +70,7 @@ final class PedidosController extends AbstractController
         $pedido->setIdUsuario($usuario);
         $pedido->setFecha(new \DateTime());
         $pedido->setPrecio($precioTotal);
+        $pedido->setCarritos($carrito);
 
         $entityManager->persist($pedido);
 

@@ -26,6 +26,10 @@ class Pedidos
     #[ORM\JoinColumn(name: 'id_usuario', referencedColumnName: 'id', nullable: false)]
     private ?Usuarios $id_usuario = null;
 
+    #[ORM\ManyToOne(targetEntity: Carritos::class, inversedBy: 'pedidos')]
+    #[ORM\JoinColumn(name: 'id_carrito', referencedColumnName: 'id', nullable: false)]
+    private ?Carritos $carritos = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,6 +65,17 @@ class Pedidos
     public function setIdUsuario(?Usuarios $id_usuario): static
     {
         $this->id_usuario = $id_usuario;
+        return $this;
+    }
+
+    public function getCarritos(): ?Carritos
+    {
+        return $this->carritos;
+    }
+
+    public function setCarritos(?Carritos $carritos): static
+    {
+        $this->carritos = $carritos;
         return $this;
     }
 }
