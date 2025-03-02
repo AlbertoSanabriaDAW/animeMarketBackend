@@ -124,5 +124,41 @@ final class CarritoProductosController extends AbstractController
             ]
         ], JsonResponse::HTTP_OK);
     }
+    #[Route('/carrito/eliminar/{idProducto}', name: 'eliminar_producto_carrito', methods: ['DELETE'])]
+    public function eliminarProductoDelCarrito(
+        int $idProducto,
+        CarritosRepository $carritosRepository,
+        CarritoProductosRepository $carritoProductosRepository
+    ): JsonResponse {
+        /** @var Usuarios $user */
+        $user = $this->getUser();
+
+        if ($user === null) {
+            return new JsonResponse(['error' => 'Usuario no autenticado'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
+        // Obtener el carrito del usuario
+        $carrito = $carritosRepository->findOneBy(['usuario' => $user]);
+        if (!$carrito) {
+            return new JsonResponse(['error' => 'No se encontró un carrito activo'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        // Buscar el producto en el carrito
+        $carritoProducto = $carritoProductosRepository->findOneBy([
+            'carrito' => $carrito,
+            'producto' => $idProducto
+        ]);
+
+        if (!$carritoProducto) {
+            return new JsonResponse(['error' => 'El producto no está en el carrito'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        // Eliminar el producto del carrito
+        $this->entityManager->remove($carritoProducto);
+        $this->entityManager->flush();
+
+        return new JsonResponse(['mensaje' => 'Producto eliminado del carrito'], JsonResponse::HTTP_OK);
+    }
+
 }
 
