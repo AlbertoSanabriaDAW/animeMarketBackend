@@ -32,7 +32,7 @@ security:
     # Control de acceso a rutas
     access_control:
         - { path: ^/api/usuarios/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/usuarios/registro, roles: PUBLIC_ACCESS }
+        - { path: ^/api/usuarios/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/carritoproductos/carrito/agregar, roles: PUBLIC_ACCESS }
         - { path: ^/api/productos/all, roles: PUBLIC_ACCESS }
         - { path: ^/api/productos/bobobo, roles: PUBLIC_ACCESS }
