@@ -29,8 +29,8 @@ RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-plat
 # Copiar el resto de los archivos del proyecto
 COPY . .
 
-# Ajustar permisos antes de la segunda instalación de Composer
-RUN chmod -R 777 var/
+# Asegurar que el directorio var/ existe antes de aplicar permisos
+RUN mkdir -p var && chmod -R 777 var/
 
 # Finalizar instalación de Composer (ahora con todos los archivos disponibles)
 RUN composer install --no-interaction --optimize-autoloader
@@ -41,9 +41,6 @@ RUN useradd -m symfonyuser && \
 
 # Cambiar a usuario no-root
 USER symfonyuser
-
-# Asegurar permisos en var/
-RUN mkdir -p var && chmod -R 777 var/
 
 # Configurar Symfony para desarrollo
 ENV APP_ENV=dev
