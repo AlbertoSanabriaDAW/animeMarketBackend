@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libcurl4-openssl-dev \
     && docker-php-ext-install intl pdo pdo_pgsql pgsql zip opcache \
+    && pecl install raphf \
+    && docker-php-ext-enable raphf \
     && pecl install pecl_http \
     && docker-php-ext-enable http
 
