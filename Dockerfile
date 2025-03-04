@@ -24,10 +24,13 @@ WORKDIR /var/www/symfony
 COPY composer.json composer.lock symfony.lock ./
 
 # Instalar dependencias de Symfony como root antes de copiar el resto del código
-RUN composer install --no-interaction --no-scripts --no-autoloader || true
+RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs || true
 
 # Copiar el resto de los archivos del proyecto
 COPY . .
+
+# Ajustar permisos antes de la segunda instalación de Composer
+RUN chmod -R 777 var/
 
 # Finalizar instalación de Composer (ahora con todos los archivos disponibles)
 RUN composer install --no-interaction --optimize-autoloader
@@ -39,7 +42,7 @@ RUN useradd -m symfonyuser && \
 # Cambiar a usuario no-root
 USER symfonyuser
 
-# Crear el directorio var/ manualmente si no existe y dar permisos
+# Asegurar permisos en var/
 RUN mkdir -p var && chmod -R 777 var/
 
 # Configurar Symfony para desarrollo
@@ -48,8 +51,8 @@ ENV APP_ENV=dev
 # Configurar Volumes para cambios en caliente
 VOLUME ["/var/www/symfony"]
 
-# Exponer el puerto
-EXPOSE 8000
+# Exponer el puerto 80 para Apache
+EXPOSE 80
 
-# Ejecutar la aplicación
-CMD php -S 0.0.0.0:8000 -t public
+# Ejecutar Apache en primer plano
+CMD ["apache2-foreground"]
