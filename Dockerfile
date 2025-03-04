@@ -41,11 +41,8 @@ WORKDIR /var/www/symfony
 # Copiar archivos esenciales antes de instalar dependencias
 COPY --chown=symfonyuser:symfonyuser composer.json composer.lock symfony.lock ./
 
-# Actualizar dependencias antes de instalar
-RUN composer update --no-interaction --no-scripts --no-autoloader
-
-# Instalar dependencias de Symfony como usuario no-root
-RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs || true
+# Instalar dependencias sin ejecutar scripts automáticos
+RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs
 
 # Copiar el resto del código
 COPY --chown=symfonyuser:symfonyuser . .
@@ -53,8 +50,14 @@ COPY --chown=symfonyuser:symfonyuser . .
 # Asegurar permisos correctos en var/
 RUN mkdir -p var && chmod -R 777 var/
 
+# Ejecutar `composer dump-autoload` para regenerar el autoloader sin fallos
+RUN composer dump-autoload --optimize
+
+# Deshabilitar los auto-scripts de Symfony para evitar errores
+RUN composer config --no-plugins allow-plugins.symfony/flex false
+
 # Finalizar instalación de Composer (con autoloader optimizado)
-RUN composer install --no-interaction --optimize-autoloader
+RUN composer install --no-interaction --optimize-autoloader --no-scripts
 
 # Exponer el puerto 80 para Apache
 EXPOSE 80
