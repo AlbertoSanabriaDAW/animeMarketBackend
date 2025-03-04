@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable http
 
 # Instalar Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN chmod +x /usr/local/bin/composer
 
 # Crear directorio de trabajo
 WORKDIR /var/www/symfony
@@ -29,7 +30,7 @@ WORKDIR /var/www/symfony
 COPY composer.json composer.lock symfony.lock ./
 
 # Instalar dependencias de Symfony como root antes de copiar el resto del código
-RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs || true
+RUN php /usr/local/bin/composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs || true
 
 # Copiar el resto de los archivos del proyecto
 COPY . .
@@ -38,7 +39,7 @@ COPY . .
 RUN mkdir -p var && chmod -R 777 var/
 
 # Finalizar instalación de Composer (ahora con todos los archivos disponibles)
-RUN composer install --no-interaction --optimize-autoloader
+RUN php /usr/local/bin/composer install --no-interaction --optimize-autoloader
 
 # Crear un usuario no root para ejecutar la aplicación
 RUN useradd -m symfonyuser && \
