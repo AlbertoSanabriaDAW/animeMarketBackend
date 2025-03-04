@@ -13,46 +13,44 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libssl-dev \
     libcurl4-openssl-dev \
+    curl \
     && docker-php-ext-install intl pdo pdo_pgsql pgsql zip opcache \
     && pecl install raphf \
     && docker-php-ext-enable raphf \
     && pecl install pecl_http \
     && docker-php-ext-enable http
 
+# Instalar Symfony CLI
+RUN curl -sS https://get.symfony.com/cli/installer | bash \
+    && mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN chmod +x /usr/local/bin/composer
+
+# Crear usuario no-root para seguridad
+RUN useradd -m symfonyuser
+
+# Cambiar al usuario antes de continuar con la instalación de Symfony
+USER symfonyuser
 
 # Crear directorio de trabajo
 WORKDIR /var/www/symfony
 
 # Copiar archivos esenciales antes de instalar dependencias
-COPY composer.json composer.lock symfony.lock ./
+COPY --chown=symfonyuser:symfonyuser composer.json composer.lock symfony.lock ./
 
-# Instalar dependencias de Symfony como root antes de copiar el resto del código
-RUN php /usr/local/bin/composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs || true
+# Instalar dependencias de Symfony como usuario no-root
+RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs || true
 
-# Copiar el resto de los archivos del proyecto
-COPY . .
+# Copiar el resto del código
+COPY --chown=symfonyuser:symfonyuser . .
 
-# Asegurar que el directorio var/ existe antes de aplicar permisos
+# Asegurar permisos correctos en var/
 RUN mkdir -p var && chmod -R 777 var/
 
-# Finalizar instalación de Composer (ahora con todos los archivos disponibles)
-RUN php /usr/local/bin/composer install --no-interaction --optimize-autoloader
-
-# Crear un usuario no root para ejecutar la aplicación
-RUN useradd -m symfonyuser && \
-    chown -R symfonyuser:symfonyuser /var/www/symfony
-
-# Cambiar a usuario no-root
-USER symfonyuser
-
-# Configurar Symfony para desarrollo
-ENV APP_ENV=dev
-
-# Configurar Volumes para cambios en caliente
-VOLUME ["/var/www/symfony"]
+# Finalizar instalación de Composer (con autoloader optimizado)
+RUN composer install --no-interaction --optimize-autoloader
 
 # Exponer el puerto 80 para Apache
 EXPOSE 80
