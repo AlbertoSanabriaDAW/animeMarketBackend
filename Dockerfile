@@ -12,7 +12,10 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libonig-dev \
     libssl-dev \
-    && docker-php-ext-install intl pdo pdo_pgsql pgsql zip opcache
+    libcurl4-openssl-dev \
+    && docker-php-ext-install intl pdo pdo_pgsql pgsql zip opcache \
+    && pecl install pecl_http \
+    && docker-php-ext-enable http
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
