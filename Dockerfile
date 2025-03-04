@@ -20,10 +20,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Crear directorio de trabajo
 WORKDIR /var/www/symfony
 
-# Copiar los archivos del proyecto antes de instalar dependencias
+# Copiar archivos esenciales antes de instalar dependencias
+COPY composer.json composer.lock symfony.lock ./
+
+# Instalar dependencias de Symfony como root antes de copiar el resto del código
+RUN composer install --no-interaction --no-scripts --no-autoloader || true
+
+# Copiar el resto de los archivos del proyecto
 COPY . .
 
-# Instalar dependencias de Symfony como root antes de cambiar de usuario
+# Finalizar instalación de Composer (ahora con todos los archivos disponibles)
 RUN composer install --no-interaction --optimize-autoloader
 
 # Crear un usuario no root para ejecutar la aplicación
