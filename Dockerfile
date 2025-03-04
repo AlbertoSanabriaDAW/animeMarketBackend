@@ -41,6 +41,9 @@ WORKDIR /var/www/symfony
 # Copiar archivos esenciales antes de instalar dependencias
 COPY --chown=symfonyuser:symfonyuser composer.json composer.lock symfony.lock ./
 
+# Actualizar dependencias antes de instalar
+RUN composer update --no-interaction --no-scripts --no-autoloader
+
 # Instalar dependencias de Symfony como usuario no-root
 RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-platform-reqs || true
 
